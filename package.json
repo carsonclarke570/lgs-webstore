@@ -18,7 +18,7 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css,md}\"",
-    "prepare": "husky install"
+    "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\""
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",

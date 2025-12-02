@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    name: "CI/CD - Build"
     
     services:
       postgres:
