@@ -138,11 +138,8 @@ jobs:
           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
         run: npm run prisma:generate
 
-      - name: Build application
-        run: npm run build
-
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps
       
       - name: Run E2E tests
         env:
