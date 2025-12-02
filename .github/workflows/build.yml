@@ -15,7 +15,7 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: "CI/CD - Lint"
+    name: "Lint"
     steps:
       - uses: actions/checkout@v4
       
@@ -54,7 +54,7 @@ jobs:
   
   integration-tests:
     runs-on: ubuntu-latest
-    name: "CI/CD - Integration Tests"
+    name: "Integration Tests"
     
     services:
       postgres:
@@ -94,7 +94,7 @@ jobs:
 
   e2e-tests:
     runs-on: ubuntu-latest
-    name: "CI/CD - E2E Tests"
+    name: "E2E Tests"
     
     services:
       postgres:
