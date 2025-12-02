@@ -14,3 +14,203 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
+// ============================================================================
+// USER & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id                      String   @id @default(cuid())
+  email                   String   @unique
+  passwordHash            String
+  name                    String?
+  defaultShippingAddress  Json?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  orders                  Order[]
+  
+  @@index([email])
+}
+
+// ============================================================================
+// PRODUCTS
+// ============================================================================
+
+enum ProductType {
+  STANDARD
+  MTG_SINGLE
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  type        ProductType
+  name        String
+  slug        String      @unique
+  category    String?
+  description String?
+  imageUrl    String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  mtgCard     MtgCard?
+  inventory   Inventory[]
+  orderItems  OrderItem[]
+  
+  @@index([type, isActive])
+  @@index([slug])
+  @@index([name])
+}
+
+model MtgCard {
+  id              String   @id @default(cuid())
+  productId       String   @unique
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  // Scryfall integration
+  scryfallId      String   @unique
+  oracleId        String
+  
+  // Card identity
+  setCode         String
+  setName         String
+  collectorNumber String
+  rarity          String
+  
+  // Gameplay
+  manaCost        String?
+  cmc             Float
+  colors          String[]
+  colorIdentity   String[]
+  typeLine        String
+  oracleText      String?
+  power           String?
+  toughness       String?
+  loyalty         String?
+  
+  // Legalities (JSON for flexibility)
+  legalities      Json
+  
+  // Metadata
+  artist          String?
+  flavorText      String?
+  
+  // Pricing (cache from TCGPlayer/Scryfall)
+  tcgplayerMarketPrice Decimal? @db.Decimal(10, 2)
+  lastPriceUpdate      DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([scryfallId])
+  @@index([setCode])
+  @@index([oracleId])
+  @@index([colors])
+  @@index([typeLine])
+}
+
+// ============================================================================
+// INVENTORY
+// ============================================================================
+
+enum CardCondition {
+  NM  // Near Mint
+  LP  // Lightly Played
+  MP  // Moderately Played
+  HP  // Heavily Played
+  DMG // Damaged
+}
+
+model Inventory {
+  id          String         @id @default(cuid())
+  productId   String
+  product     Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  condition   CardCondition?
+  quantity    Int            @default(0)
+  price       Decimal        @db.Decimal(10, 2)
+  costBasis   Decimal?       @db.Decimal(10, 2)
+  
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  @@unique([productId, condition])
+  @@index([productId])
+  @@index([quantity])
+}
+
+// ============================================================================
+// ORDERS
+// ============================================================================
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  
+  status          OrderStatus @default(PENDING)
+  
+  // Contact info
+  customerEmail   String
+  customerName    String
+  
+  // Address
+  shippingAddress Json
+  
+  // Pricing
+  subtotal        Decimal     @db.Decimal(10, 2)
+  shippingCost    Decimal     @db.Decimal(10, 2)
+  tax             Decimal     @db.Decimal(10, 2)
+  discount        Decimal     @db.Decimal(10, 2) @default(0)
+  total           Decimal     @db.Decimal(10, 2)
+  
+  // Stripe
+  stripePaymentIntentId String? @unique
+  
+  // Fulfillment
+  trackingNumber  String?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  
+  // Metadata
+  notes           String?
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  items           OrderItem[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([customerEmail])
+}
+
+model OrderItem {
+  id           String         @id @default(cuid())
+  orderId      String
+  order        Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  productId    String
+  product      Product        @relation(fields: [productId], references: [id])
+  
+  condition    CardCondition?
+  quantity     Int
+  pricePerUnit Decimal        @db.Decimal(10, 2)
+  
+  createdAt    DateTime       @default(now())
+  
+  @@index([orderId])
+  @@index([productId])
+}
