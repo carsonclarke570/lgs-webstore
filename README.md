@@ -1,5 +1,7 @@
 # The Respite
 
+[![CI](https://github.com/carsonclarke570/lgs-webstore/actions/workflows/ci.yml/badge.svg)](https://github.com/carsonclarke570/lgs-webstore/actions/workflows/ci.yml)
+
 A modern e-commerce platform for trading card game singles, designed to become a full-service local game store with integrated online and in-store experiences.
 
 ## Project Overview

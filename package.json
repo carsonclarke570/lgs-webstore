@@ -8,15 +8,18 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
+
     "test": "jest --watch",
     "test:unit": "jest --testPathPattern=tests/unit",
     "test:integration": "jest --testPathPattern=tests/integration",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "test:e2e": "playwright test",
+
     "prisma:studio": "npx prisma studio",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:seed": "tsx prisma/seed.ts",
+    "prisma:deploy": "npx prisma migrate deploy",
+
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css,md}\"",
     "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\""
   },
@@ -43,6 +46,7 @@
     "@types/node": "^20.19.25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.6",
     "eslint-config-prettier": "^10.1.8",
@@ -52,6 +56,7 @@
     "prisma-erd-generator": "^2.3.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
