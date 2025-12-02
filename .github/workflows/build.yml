@@ -76,7 +76,7 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run Prisma migrations
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
