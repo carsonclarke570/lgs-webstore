@@ -51,6 +51,9 @@ jobs:
         run: npx prisma migrate deploy
 
       - name: Generate Prisma Client
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
         run: npx prisma generate
       
       - name: Unit tests
