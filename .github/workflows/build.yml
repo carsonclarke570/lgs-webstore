@@ -62,7 +62,10 @@ jobs:
       - name: Build
         run: npm run build
       
-      - name: E2E tests
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Playwright E2E tests
         run: npm run test:e2e
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
