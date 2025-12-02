@@ -7,7 +7,7 @@ describe('Example Integration Tests', () => {
 })
 
 // Dummy function for testing
-function processOrder(order: { items: any[], total: number }) {
+function processOrder(order: { items: unknown[], total: number }) {
   return {
     ...order,
     processed: true,
