@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { auth as authMiddleware } from "@/auth"
 
 function isProtectedEnvironment() {
     return (
@@ -28,7 +29,7 @@ function checkBasicAuth(request: NextRequest): boolean {
     }
 }
 
-export function middleware(request: NextRequest) {
+function stagingProtectionMiddleware(request: NextRequest) {
     // Skip protection for production
     if (!isProtectedEnvironment()) {
         return NextResponse.next()
@@ -47,6 +48,8 @@ export function middleware(request: NextRequest) {
         },
     })
 }
+
+export default authMiddleware(stagingProtectionMiddleware)
 
 // Don't run middleware on static files
 export const config = {
