@@ -22,7 +22,6 @@ describe('Database Integration Tests', () => {
     const user = await prisma.user.create({
       data: {
         email: `test-${Date.now()}@example.com`,
-        passwordHash: 'test_hash',
         name: 'Test User',
       },
     })
