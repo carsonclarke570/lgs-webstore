@@ -97,7 +97,6 @@ model Product {
   category    String?
   description String?
   imageUrl    String?
-  isActive    Boolean     @default(true)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   
@@ -105,7 +104,7 @@ model Product {
   inventory   Inventory[]
   orderItems  OrderItem[]
   
-  @@index([type, isActive])
+  @@index([type])
   @@index([slug])
   @@index([name])
 }
@@ -142,10 +141,6 @@ model MtgCard {
   // Metadata
   artist          String?
   flavorText      String?
-  
-  // Pricing (cache from TCGPlayer/Scryfall)
-  tcgplayerMarketPrice Decimal? @db.Decimal(10, 2)
-  lastPriceUpdate      DateTime?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
