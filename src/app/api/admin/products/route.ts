@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
         return errorResponse(400, "Cannot create an MTG single without product type of MTG_SINGLE")
     }
 
-    var mtgRequest = undefined
+    let mtgRequest = undefined
     if (data.mtgCard && data.type == ProductType.MTG_SINGLE) {
         mtgRequest = {
             create: {
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
                 mtgCard: mtgRequest,
                 ...(data.inventory && {
                     inventory: {
-                        create: data.inventory.map((inv: any) => ({
+                        create: data.inventory.map((inv) => ({
                             condition: inv.condition,
                             quantity: inv.quantity,
                             price: inv.price,

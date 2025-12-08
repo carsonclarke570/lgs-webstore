@@ -11,6 +11,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table"
+import Image from 'next/image'
 import { GetProductsResponse } from "@/app/api/admin/products/route"
 import { APIError } from "@/lib/error"
 import Link from "next/link"
@@ -28,7 +29,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react"
 
 export default function Page() {
@@ -84,7 +85,7 @@ export default function Page() {
             return (
               <tr key={product.id}>
                 <td>
-                  {product.imageUrl && <img src={product.imageUrl} alt={product.name} width={50} />}
+                  {product.imageUrl && <Image src={product.imageUrl} alt={product.name} width={50} />}
                   {product.name}
                 </td>
                 <td>{product.mtgCard?.setName}</td>
@@ -164,7 +165,7 @@ export const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "price",
     header: () => <div className="text-right">Price</div>,
-    cell: ({ row }) => {
+    cell: () => {
       // const totalQty =  row.inventory.reduce((sum, inv) => sum + inv.quantity, 0)
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -180,7 +181,7 @@ export const columns: ColumnDef<Data>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      // const payment = row.original
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -213,13 +214,16 @@ interface ProductTableProps {
   totalPages: number
 }
 
-export function ProductTable({ data, columns, page, totalPages }: ProductTableProps) {
+export function ProductTable({ page, totalPages, ...props }: ProductTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [rowSelection, setRowSelection] = React.useState({})
 
+  const data = React.useMemo(() => props.data, [props.data])
+  const cols = React.useMemo(() => props.columns, [props.columns])
+
   const table = useReactTable<Data>({
     data,
-    columns,
+    columns: cols,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

@@ -11,7 +11,7 @@ export default function Page() {
           <IconRouteOff />
         </EmptyMedia>
         <EmptyTitle>No Content Yet</EmptyTitle>
-        <EmptyDescription>This dashboard page isn't ready yet</EmptyDescription>
+        <EmptyDescription>This dashboard page isn&apos;t ready yet</EmptyDescription>
       </EmptyHeader>
     </Empty>
   )

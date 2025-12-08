@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server"
 
-export type APIError =  {
+export type APIError = {
     code: number,
     error: string,
-    causes: any[]
+    causes: unknown[]
 }
 
-export default function errorResponse(code: number, message: string, causes: any[] = []): NextResponse<APIError> {
+export default function errorResponse(code: number, message: string, causes: unknown[] = []): NextResponse<APIError> {
     return NextResponse.json(
-        { 
-            code: code, 
-            error: message, 
+        {
+            code: code,
+            error: message,
             causes: causes
-        }, 
+        },
         { status: code }
     )
 }
