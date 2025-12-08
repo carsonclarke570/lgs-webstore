@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2021",
     "lib": [
       "dom",
       "dom.iterable",
@@ -26,7 +26,21 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipDefaultLibCheck": true,
+    "declaration": false,
+    "sourceMap": false,
+    "inlineSourceMap": true,
+    "outDir": "./.medusa/server",
+    "rootDir": "./",
+    "forceConsistentCasingInFileNames": true,
+    "checkJs": false,
+    "strictNullChecks": true
+  },
+  "ts-node": {
+    "swc": true
   },
   "include": [
     "next-env.d.ts",
@@ -35,9 +49,13 @@
     ".next/types/**/*.ts",
     "jest.setup.ts",
     "jest.config.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".medusa/types/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".medusa/server",
+    ".medusa/admin",
+    ".cache"
   ]
 }

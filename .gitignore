@@ -43,4 +43,13 @@ next-env.d.ts
 /src/generated/prisma
 
 .vercel
-.env*.local
+.idea
+
+coverage
+
+./tsconfig.tsbuildinfo
+medusa-db.sql
+build
+.cache
+
+.medusa

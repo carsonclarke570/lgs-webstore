@@ -1,33 +1,26 @@
-import type { Config } from 'jest'
-import nextJest from 'next/jest'
+import { loadEnv } from "@medusajs/utils";
 
-const createJestConfig = nextJest({
-  dir: './',
-})
+loadEnv("test", process.cwd());
 
-const config: Config = {
-  coverageProvider: 'v8',
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-  },
-  testMatch: [
-    '<rootDir>/tests/**/*.test.ts',
-    '<rootDir>/tests/**/*.test.tsx',
+export const transform = {
+  "^.+\\.[jt]s$": [
+    "@swc/jest",
+    {
+      jsc: {
+        parser: { syntax: "typescript", decorators: true },
+      },
+    },
   ],
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/*.stories.tsx',
-    '!src/app/**', // Exclude app directory for now
-  ],
-  moduleDirectories: ['node_modules', '<rootDir>/'],
-  testPathIgnorePatterns: ['/node_modules/', '/.next/'],
-  transformIgnorePatterns: [
-    '/node_modules/',
-    '^.+\\.module\\.(css|sass|scss)$',
-  ]
+};
+export const testEnvironment = "node";
+export const moduleFileExtensions = ["js", "ts", "json"];
+export const modulePathIgnorePatterns = ["dist/", "<rootDir>/.medusa/"];
+export const setupFiles = ["./integration-tests/setup.js"];
+
+if (process.env.TEST_TYPE === "integration:http") {
+  module.exports.testMatch = ["**/integration-tests/http/*.spec.[jt]s"];
+} else if (process.env.TEST_TYPE === "integration:modules") {
+  module.exports.testMatch = ["**/src/modules/*/__tests__/**/*.[jt]s"];
+} else if (process.env.TEST_TYPE === "unit") {
+  module.exports.testMatch = ["**/src/**/__tests__/**/*.unit.spec.[jt]s"];
 }
-
-export default createJestConfig(config)
