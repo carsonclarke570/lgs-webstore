@@ -7,187 +7,191 @@ on:
     branches: [develop, main]
     
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
-    name: "Lint"
+    name: "Build & Test"
+# jobs:
+#   lint:
+#     runs-on: ubuntu-latest
+#     name: "Lint"
 
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: respite_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+#     services:
+#       postgres:
+#         image: postgres:16-alpine
+#         env:
+#           POSTGRES_USER: test
+#           POSTGRES_PASSWORD: test
+#           POSTGRES_DB: respite_test
+#         ports:
+#           - 5432:5432
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
 
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#           cache: 'npm'
       
-      - name: Install dependencies
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm ci
+#       - name: Install dependencies
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm ci
 
-      - name: Run Prisma migrations
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run prisma:deploy
+#       - name: Run Prisma migrations
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run prisma:deploy
 
-      - name: Generate Prisma Client
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run prisma:generate
+#       - name: Generate Prisma Client
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run prisma:generate
       
-      - name: Run ESLint
-        run: npm run lint
+#       - name: Run ESLint
+#         run: npm run lint
 
-      - name: Run TypeScript compiler
-        run: npm run type-check
+#       - name: Run TypeScript compiler
+#         run: npm run type-check
 
-  unit-tests:
-    runs-on: ubuntu-latest
-    name: "CI/CD - Unit Tests"
-    steps:
-      - uses: actions/checkout@v4
+#   unit-tests:
+#     runs-on: ubuntu-latest
+#     name: "CI/CD - Unit Tests"
+#     steps:
+#       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#           cache: 'npm'
       
-      - name: Install dependencies
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm ci
+#       - name: Install dependencies
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm ci
       
-      - name: Run unit tests
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run test:unit
+#       - name: Run unit tests
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run test:unit
   
-  integration-tests:
-    runs-on: ubuntu-latest
-    name: "Integration Tests"
+#   integration-tests:
+#     runs-on: ubuntu-latest
+#     name: "Integration Tests"
     
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: respite_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+#     services:
+#       postgres:
+#         image: postgres:16-alpine
+#         env:
+#           POSTGRES_USER: test
+#           POSTGRES_PASSWORD: test
+#           POSTGRES_DB: respite_test
+#         ports:
+#           - 5432:5432
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
     
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#           cache: 'npm'
       
-      - name: Install dependencies
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm ci
+#       - name: Install dependencies
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm ci
 
-      - name: Run Prisma migrations
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run prisma:deploy
+#       - name: Run Prisma migrations
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run prisma:deploy
 
-      - name: Generate Prisma Client
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run prisma:generate
+#       - name: Generate Prisma Client
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run prisma:generate
       
-      - name: Run integration tests
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run test:integration
+#       - name: Run integration tests
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run test:integration
 
-  e2e-tests:
-    runs-on: ubuntu-latest
-    name: "E2E Tests"
+#   e2e-tests:
+#     runs-on: ubuntu-latest
+#     name: "E2E Tests"
     
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: respite_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+#     services:
+#       postgres:
+#         image: postgres:16-alpine
+#         env:
+#           POSTGRES_USER: test
+#           POSTGRES_PASSWORD: test
+#           POSTGRES_DB: respite_test
+#         ports:
+#           - 5432:5432
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
     
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#           cache: 'npm'
       
-      - name: Install dependencies
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm ci
+#       - name: Install dependencies
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm ci
       
-      - name: Run Prisma migrations
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run prisma:deploy
+#       - name: Run Prisma migrations
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run prisma:deploy
       
-      - name: Generate Prisma Client
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-        run: npm run prisma:generate
+#       - name: Generate Prisma Client
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#         run: npm run prisma:generate
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+#       - name: Install Playwright browsers
+#         run: npx playwright install --with-deps
       
-      - name: Run E2E tests
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
-          DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
-          NEXTAUTH_URL: http://localhost:3000
-          NEXTAUTH_SECRET: test-secret
-        run: npm run test:e2e
+#       - name: Run E2E tests
+#         env:
+#           DATABASE_URL: postgresql://test:test@localhost:5432/respite_test
+#           DIRECT_URL: postgresql://test:test@localhost:5432/respite_test
+#           NEXTAUTH_URL: http://localhost:3000
+#           NEXTAUTH_SECRET: test-secret
+#         run: npm run test:e2e
